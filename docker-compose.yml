@@ -1,0 +1,28 @@
+version: '3' 
+
+volumes: 
+    db_store: 
+        driver: local
+        driver_opts:
+          o: bind
+          type: volume
+          device: <RUTA_VOLUMEN>
+services:
+
+    mongodb:
+        image: mongo:4.0.0
+        ports:
+          - '27019:27017'
+        volumes:
+            - db_store:/data/db
+    backend:
+        build: practica-1
+        command: npm start
+        depends_on:
+                - mongodb
+        environment:
+            - MONGODB_URI=mongodb
+            - MONGODB_PORT=27017
+            - MONGODB_DB=CHISPAS
+        ports:
+            - '8888:3000'
